@@ -7,6 +7,7 @@ node {
 
     stage('check java') {
         sh "java -version"
+        sh "npm -version"
     }
 
     stage('backend tests') {

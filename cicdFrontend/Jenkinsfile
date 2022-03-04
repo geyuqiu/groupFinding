@@ -1,0 +1,42 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+    tools {
+        nodejs 'node-14'
+    }
+
+    stages {
+        stage('checkout') {
+            steps {
+                sh "ls -lisa"
+            }
+        }
+
+        stage('check node and npm') {
+            steps {
+                sh "node -v"
+                sh "npm -v"
+                sh "npm install"
+            }
+        }
+
+        stage('lint') {
+            steps {
+                sh "npm run lint"
+            }
+        }
+
+//        stage('tests') {
+//            steps {
+//                sh "npm run test:headless"
+//            }
+//        }
+
+        stage('packaging') {
+            steps {
+                sh "npm run build:prod"
+            }
+        }
+    }
+}

@@ -39,6 +39,21 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['Chrome'],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    customLaunchers: {
+      ChromeHeadlessCustom: {
+        base: "ChromeHeadless",
+        flags: [
+          "--disable-setuid-sandbox",
+          "--no-sandbox",
+          "--disable-web-security",
+          '--disable-gpu',
+          "--no-proxy-server",
+          "--enable-logging",
+          '--remote-debugging-port=9222',
+          "--v=1"
+        ]
+      }
+    }
   });
 };
