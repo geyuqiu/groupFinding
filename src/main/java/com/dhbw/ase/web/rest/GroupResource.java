@@ -1,7 +1,8 @@
 package com.dhbw.ase.web.rest;
 
-import com.dhbw.ase.domain.Group;
 import com.dhbw.ase.repository.GroupRepository;
+import com.dhbw.ase.service.GroupService;
+import com.dhbw.ase.service.dto.GroupDTO;
 import com.dhbw.ase.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -22,7 +22,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class GroupResource {
 
     private final Logger log = LoggerFactory.getLogger(GroupResource.class);
@@ -32,26 +31,29 @@ public class GroupResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final GroupService groupService;
+
     private final GroupRepository groupRepository;
 
-    public GroupResource(GroupRepository groupRepository) {
+    public GroupResource(GroupService groupService, GroupRepository groupRepository) {
+        this.groupService = groupService;
         this.groupRepository = groupRepository;
     }
 
     /**
      * {@code POST  /groups} : Create a new group.
      *
-     * @param group the group to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new group, or with status {@code 400 (Bad Request)} if the group has already an ID.
+     * @param groupDTO the groupDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new groupDTO, or with status {@code 400 (Bad Request)} if the group has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/groups")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group) throws URISyntaxException {
-        log.debug("REST request to save Group : {}", group);
-        if (group.getId() != null) {
+    public ResponseEntity<GroupDTO> createGroup(@RequestBody GroupDTO groupDTO) throws URISyntaxException {
+        log.debug("REST request to save Group : {}", groupDTO);
+        if (groupDTO.getId() != null) {
             throw new BadRequestAlertException("A new group cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Group result = groupRepository.save(group);
+        GroupDTO result = groupService.save(groupDTO);
         return ResponseEntity
             .created(new URI("/api/groups/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -61,21 +63,23 @@ public class GroupResource {
     /**
      * {@code PUT  /groups/:id} : Updates an existing group.
      *
-     * @param id the id of the group to save.
-     * @param group the group to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated group,
-     * or with status {@code 400 (Bad Request)} if the group is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the group couldn't be updated.
+     * @param id the id of the groupDTO to save.
+     * @param groupDTO the groupDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated groupDTO,
+     * or with status {@code 400 (Bad Request)} if the groupDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the groupDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/groups/{id}")
-    public ResponseEntity<Group> updateGroup(@PathVariable(value = "id", required = false) final Long id, @RequestBody Group group)
-        throws URISyntaxException {
-        log.debug("REST request to update Group : {}, {}", id, group);
-        if (group.getId() == null) {
+    public ResponseEntity<GroupDTO> updateGroup(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody GroupDTO groupDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to update Group : {}, {}", id, groupDTO);
+        if (groupDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, group.getId())) {
+        if (!Objects.equals(id, groupDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -83,32 +87,34 @@ public class GroupResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Group result = groupRepository.save(group);
+        GroupDTO result = groupService.save(groupDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, group.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, groupDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /groups/:id} : Partial updates given fields of an existing group, field will ignore if it is null
      *
-     * @param id the id of the group to save.
-     * @param group the group to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated group,
-     * or with status {@code 400 (Bad Request)} if the group is not valid,
-     * or with status {@code 404 (Not Found)} if the group is not found,
-     * or with status {@code 500 (Internal Server Error)} if the group couldn't be updated.
+     * @param id the id of the groupDTO to save.
+     * @param groupDTO the groupDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated groupDTO,
+     * or with status {@code 400 (Bad Request)} if the groupDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the groupDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the groupDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/groups/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Group> partialUpdateGroup(@PathVariable(value = "id", required = false) final Long id, @RequestBody Group group)
-        throws URISyntaxException {
-        log.debug("REST request to partial update Group partially : {}, {}", id, group);
-        if (group.getId() == null) {
+    public ResponseEntity<GroupDTO> partialUpdateGroup(
+        @PathVariable(value = "id", required = false) final Long id,
+        @RequestBody GroupDTO groupDTO
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Group partially : {}, {}", id, groupDTO);
+        if (groupDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, group.getId())) {
+        if (!Objects.equals(id, groupDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -116,26 +122,11 @@ public class GroupResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Group> result = groupRepository
-            .findById(group.getId())
-            .map(existingGroup -> {
-                if (group.getDescription() != null) {
-                    existingGroup.setDescription(group.getDescription());
-                }
-                if (group.getTopic() != null) {
-                    existingGroup.setTopic(group.getTopic());
-                }
-                if (group.getGrade() != null) {
-                    existingGroup.setGrade(group.getGrade());
-                }
-
-                return existingGroup;
-            })
-            .map(groupRepository::save);
+        Optional<GroupDTO> result = groupService.partialUpdate(groupDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, group.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, groupDTO.getId().toString())
         );
     }
 
@@ -145,34 +136,34 @@ public class GroupResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of groups in body.
      */
     @GetMapping("/groups")
-    public List<Group> getAllGroups() {
+    public List<GroupDTO> getAllGroups() {
         log.debug("REST request to get all Groups");
-        return groupRepository.findAll();
+        return groupService.findAll();
     }
 
     /**
      * {@code GET  /groups/:id} : get the "id" group.
      *
-     * @param id the id of the group to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the group, or with status {@code 404 (Not Found)}.
+     * @param id the id of the groupDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the groupDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/groups/{id}")
-    public ResponseEntity<Group> getGroup(@PathVariable Long id) {
+    public ResponseEntity<GroupDTO> getGroup(@PathVariable Long id) {
         log.debug("REST request to get Group : {}", id);
-        Optional<Group> group = groupRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(group);
+        Optional<GroupDTO> groupDTO = groupService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(groupDTO);
     }
 
     /**
      * {@code DELETE  /groups/:id} : delete the "id" group.
      *
-     * @param id the id of the group to delete.
+     * @param id the id of the groupDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/groups/{id}")
     public ResponseEntity<Void> deleteGroup(@PathVariable Long id) {
         log.debug("REST request to delete Group : {}", id);
-        groupRepository.deleteById(id);
+        groupService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

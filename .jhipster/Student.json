@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20220304134116",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "student",
   "fields": [
@@ -25,5 +25,5 @@
       "relationshipValidateRules": "required"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }
