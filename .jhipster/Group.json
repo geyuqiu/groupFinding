@@ -1,0 +1,35 @@
+{
+  "applications": "*",
+  "changelogDate": "20220304134115",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "jhi_group",
+  "fields": [
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "topic",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "grade",
+      "fieldType": "Double"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Group",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "student",
+      "otherEntityRelationshipName": "group",
+      "relationshipName": "student",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "no"
+}

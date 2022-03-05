@@ -1,0 +1,15 @@
+
+entity Group {
+	description String,
+    topic String,
+    grade Double
+}
+
+
+entity Student {
+	name String
+}
+
+relationship OneToMany {
+	Group to Student{group}
+}
