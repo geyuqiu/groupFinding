@@ -11,5 +11,5 @@ entity Student {
 }
 
 relationship OneToMany {
-	Group to Student{group}
+	Group to Student{group(topic) required}
 }
