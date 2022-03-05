@@ -21,7 +21,7 @@
         <dt><span jhiTranslate="groupFindingApp.student.group">Group</span></dt>
         <dd>
           <div *ngIf="student.group">
-            <a [routerLink]="['/group', student.group?.id, 'view']">{{ student.group?.id }}</a>
+            <a [routerLink]="['/group', student.group?.id, 'view']">{{ student.group?.topic }}</a>
           </div>
         </dd>
       </dl>

@@ -21,14 +21,19 @@
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="groupFindingApp.student.group" for="field_group">Group</label>
           <select class="form-control" id="field_group" data-cy="group" name="group" formControlName="group">
-            <option [ngValue]="null"></option>
+            <option *ngIf="!editForm.get('group')!.value" [ngValue]="null" selected></option>
             <option
               [ngValue]="groupOption.id === editForm.get('group')!.value?.id ? editForm.get('group')!.value : groupOption"
               *ngFor="let groupOption of groupsSharedCollection; trackBy: trackGroupById"
             >
-              {{ groupOption.id }}
+              {{ groupOption.topic }}
             </option>
           </select>
+        </div>
+        <div *ngIf="editForm.get(['group'])!.invalid && (editForm.get(['group'])!.dirty || editForm.get(['group'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['group'])?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
         </div>
       </div>
 

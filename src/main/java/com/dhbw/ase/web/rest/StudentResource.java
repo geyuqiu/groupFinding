@@ -8,6 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +48,7 @@ public class StudentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) throws URISyntaxException {
+    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) throws URISyntaxException {
         log.debug("REST request to save Student : {}", student);
         if (student.getId() != null) {
             throw new BadRequestAlertException("A new student cannot already have an ID", ENTITY_NAME, "idexists");
@@ -69,8 +71,10 @@ public class StudentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/students/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable(value = "id", required = false) final Long id, @RequestBody Student student)
-        throws URISyntaxException {
+    public ResponseEntity<Student> updateStudent(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody Student student
+    ) throws URISyntaxException {
         log.debug("REST request to update Student : {}, {}", id, student);
         if (student.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -104,7 +108,7 @@ public class StudentResource {
     @PatchMapping(value = "/students/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Student> partialUpdateStudent(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody Student student
+        @NotNull @RequestBody Student student
     ) throws URISyntaxException {
         log.debug("REST request to partial update Student partially : {}, {}", id, student);
         if (student.getId() == null) {
@@ -138,12 +142,13 @@ public class StudentResource {
     /**
      * {@code GET  /students} : get all the students.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of students in body.
      */
     @GetMapping("/students")
-    public List<Student> getAllStudents() {
+    public List<Student> getAllStudents(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Students");
-        return studentRepository.findAll();
+        return studentRepository.findAllWithEagerRelationships();
     }
 
     /**
@@ -155,7 +160,7 @@ public class StudentResource {
     @GetMapping("/students/{id}")
     public ResponseEntity<Student> getStudent(@PathVariable Long id) {
         log.debug("REST request to get Student : {}", id);
-        Optional<Student> student = studentRepository.findById(id);
+        Optional<Student> student = studentRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(student);
     }
 

@@ -3,6 +3,7 @@ package com.dhbw.ase.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 /**
  * A Student.
@@ -22,7 +23,8 @@ public class Student implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "students" }, allowSetters = true)
     private Group group;
 

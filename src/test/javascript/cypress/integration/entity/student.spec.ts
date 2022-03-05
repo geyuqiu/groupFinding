@@ -19,15 +19,35 @@ describe('Student e2e test', () => {
   const studentSample = {};
 
   let student: any;
+  let group: any;
 
   beforeEach(() => {
     cy.login(username, password);
   });
 
   beforeEach(() => {
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/groups',
+      body: { description: 'Branding Licensed Valleys', topic: 'mobile', grade: 98627 },
+    }).then(({ body }) => {
+      group = body;
+    });
+  });
+
+  beforeEach(() => {
     cy.intercept('GET', '/api/students+(?*|)').as('entitiesRequest');
     cy.intercept('POST', '/api/students').as('postEntityRequest');
     cy.intercept('DELETE', '/api/students/*').as('deleteEntityRequest');
+  });
+
+  beforeEach(() => {
+    // Simulate relationships api for better performance and reproducibility.
+    cy.intercept('GET', '/api/groups', {
+      statusCode: 200,
+      body: [group],
+    });
   });
 
   afterEach(() => {
@@ -37,6 +57,17 @@ describe('Student e2e test', () => {
         url: `/api/students/${student.id}`,
       }).then(() => {
         student = undefined;
+      });
+    }
+  });
+
+  afterEach(() => {
+    if (group) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/groups/${group.id}`,
+      }).then(() => {
+        group = undefined;
       });
     }
   });
@@ -80,7 +111,10 @@ describe('Student e2e test', () => {
         cy.authenticatedRequest({
           method: 'POST',
           url: '/api/students',
-          body: studentSample,
+          body: {
+            ...studentSample,
+            group: group,
+          },
         }).then(({ body }) => {
           student = body;
 
@@ -149,6 +183,8 @@ describe('Student e2e test', () => {
 
     it('should create an instance of Student', () => {
       cy.get(`[data-cy="name"]`).type('silver hacking').should('have.value', 'silver hacking');
+
+      cy.get(`[data-cy="group"]`).select(1);
 
       cy.get(entityCreateSaveButtonSelector).click();
 

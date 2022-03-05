@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.dhbw.ase.IntegrationTest;
+import com.dhbw.ase.domain.Group;
 import com.dhbw.ase.domain.Student;
 import com.dhbw.ase.repository.StudentRepository;
 import java.util.List;
@@ -57,6 +58,16 @@ class StudentResourceIT {
      */
     public static Student createEntity(EntityManager em) {
         Student student = new Student().name(DEFAULT_NAME);
+        // Add required entity
+        Group group;
+        if (TestUtil.findAll(em, Group.class).isEmpty()) {
+            group = GroupResourceIT.createEntity(em);
+            em.persist(group);
+            em.flush();
+        } else {
+            group = TestUtil.findAll(em, Group.class).get(0);
+        }
+        student.setGroup(group);
         return student;
     }
 
@@ -68,6 +79,16 @@ class StudentResourceIT {
      */
     public static Student createUpdatedEntity(EntityManager em) {
         Student student = new Student().name(UPDATED_NAME);
+        // Add required entity
+        Group group;
+        if (TestUtil.findAll(em, Group.class).isEmpty()) {
+            group = GroupResourceIT.createUpdatedEntity(em);
+            em.persist(group);
+            em.flush();
+        } else {
+            group = TestUtil.findAll(em, Group.class).get(0);
+        }
+        student.setGroup(group);
         return student;
     }
 

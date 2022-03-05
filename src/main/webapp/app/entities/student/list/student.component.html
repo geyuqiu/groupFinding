@@ -46,7 +46,7 @@
           <td>{{ student.name }}</td>
           <td>
             <div *ngIf="student.group">
-              <a [routerLink]="['/group', student.group?.id, 'view']">{{ student.group?.id }}</a>
+              <a [routerLink]="['/group', student.group?.id, 'view']">{{ student.group?.topic }}</a>
             </div>
           </td>
           <td class="text-end">
