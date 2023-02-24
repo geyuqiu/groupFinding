@@ -36,6 +36,7 @@
           <th scope="col"><span jhiTranslate="groupFindingApp.group.description">Description</span></th>
           <th scope="col"><span jhiTranslate="groupFindingApp.group.topic">Topic</span></th>
           <th scope="col"><span jhiTranslate="groupFindingApp.group.grade">Grade</span></th>
+          <th scope="col"><span jhiTranslate="groupFindingApp.group.year">Year</span></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -47,6 +48,7 @@
           <td>{{ group.description }}</td>
           <td>{{ group.topic }}</td>
           <td>{{ group.grade }}</td>
+          <td>{{ group.year }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/group', group.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

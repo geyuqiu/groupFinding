@@ -5,6 +5,7 @@ export interface IGroup {
   description?: string | null;
   topic?: string | null;
   grade?: number | null;
+  year?: number | null;
   students?: IStudent[] | null;
 }
 
@@ -14,6 +15,7 @@ export class Group implements IGroup {
     public description?: string | null,
     public topic?: string | null,
     public grade?: number | null,
+    public year?: number | null,
     public students?: IStudent[] | null
   ) {}
 }

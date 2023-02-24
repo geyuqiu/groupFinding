@@ -154,6 +154,8 @@ describe('Group e2e test', () => {
 
       cy.get(`[data-cy="grade"]`).type('28616').should('have.value', '28616');
 
+      cy.get(`[data-cy="year"]`).type('45528').should('have.value', '45528');
+
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {
