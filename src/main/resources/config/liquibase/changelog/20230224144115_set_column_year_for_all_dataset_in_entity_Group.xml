@@ -7,7 +7,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet id="20230224134115-2" author="yuqiu">
         <update tableName="jhi_group">
-            <column name="label" value="2022"/>
+            <column name="year" value="2022"/>
         </update>
     </changeSet>
 </databaseChangeLog>
