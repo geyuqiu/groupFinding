@@ -24,6 +24,7 @@ describe('Group Service', () => {
       description: 'AAAAAAA',
       topic: 'AAAAAAA',
       grade: 0,
+      year: 0,
     };
   });
 
@@ -62,6 +63,7 @@ describe('Group Service', () => {
           description: 'BBBBBB',
           topic: 'BBBBBB',
           grade: 1,
+          year: 1,
         },
         elemDefault
       );
@@ -81,6 +83,7 @@ describe('Group Service', () => {
           description: 'BBBBBB',
           topic: 'BBBBBB',
           grade: 1,
+          year: 1,
         },
         new Group()
       );
@@ -103,6 +106,7 @@ describe('Group Service', () => {
           description: 'BBBBBB',
           topic: 'BBBBBB',
           grade: 1,
+          year: 1,
         },
         elemDefault
       );
@@ -154,7 +158,7 @@ describe('Group Service', () => {
       });
 
       it('should add only unique Group to an array', () => {
-        const groupArray: IGroup[] = [{ id: 123 }, { id: 456 }, { id: 93681 }];
+        const groupArray: IGroup[] = [{ id: 123 }, { id: 456 }, { id: 4018 }];
         const groupCollection: IGroup[] = [{ id: 123 }];
         expectedResult = service.addGroupToCollectionIfMissing(groupCollection, ...groupArray);
         expect(expectedResult).toHaveLength(3);

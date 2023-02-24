@@ -2,7 +2,8 @@
 entity Group {
 	description String,
     topic String,
-    grade Double
+    grade Double,
+    year Integer
 }
 
 

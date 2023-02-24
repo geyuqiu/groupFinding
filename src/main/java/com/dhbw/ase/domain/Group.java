@@ -30,6 +30,9 @@ public class Group implements Serializable {
     @Column(name = "grade")
     private Double grade;
 
+    @Column(name = "year")
+    private Integer year;
+
     @OneToMany(mappedBy = "group")
     @JsonIgnoreProperties(value = { "group" }, allowSetters = true)
     private Set<Student> students = new HashSet<>();
@@ -86,6 +89,19 @@ public class Group implements Serializable {
 
     public void setGrade(Double grade) {
         this.grade = grade;
+    }
+
+    public Integer getYear() {
+        return this.year;
+    }
+
+    public Group year(Integer year) {
+        this.setYear(year);
+        return this;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Set<Student> getStudents() {
@@ -146,6 +162,7 @@ public class Group implements Serializable {
             ", description='" + getDescription() + "'" +
             ", topic='" + getTopic() + "'" +
             ", grade=" + getGrade() +
+            ", year=" + getYear() +
             "}";
     }
 }

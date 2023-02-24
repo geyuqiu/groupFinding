@@ -40,6 +40,9 @@ class GroupResourceIT {
     private static final Double DEFAULT_GRADE = 1D;
     private static final Double UPDATED_GRADE = 2D;
 
+    private static final Integer DEFAULT_YEAR = 1;
+    private static final Integer UPDATED_YEAR = 2;
+
     private static final String ENTITY_API_URL = "/api/groups";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +70,7 @@ class GroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Group createEntity(EntityManager em) {
-        Group group = new Group().description(DEFAULT_DESCRIPTION).topic(DEFAULT_TOPIC).grade(DEFAULT_GRADE);
+        Group group = new Group().description(DEFAULT_DESCRIPTION).topic(DEFAULT_TOPIC).grade(DEFAULT_GRADE).year(DEFAULT_YEAR);
         return group;
     }
 
@@ -78,7 +81,7 @@ class GroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Group createUpdatedEntity(EntityManager em) {
-        Group group = new Group().description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE);
+        Group group = new Group().description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE).year(UPDATED_YEAR);
         return group;
     }
 
@@ -104,6 +107,7 @@ class GroupResourceIT {
         assertThat(testGroup.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testGroup.getTopic()).isEqualTo(DEFAULT_TOPIC);
         assertThat(testGroup.getGrade()).isEqualTo(DEFAULT_GRADE);
+        assertThat(testGroup.getYear()).isEqualTo(DEFAULT_YEAR);
     }
 
     @Test
@@ -139,7 +143,8 @@ class GroupResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(group.getId().intValue())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].topic").value(hasItem(DEFAULT_TOPIC)))
-            .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE.doubleValue())));
+            .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE.doubleValue())))
+            .andExpect(jsonPath("$.[*].year").value(hasItem(DEFAULT_YEAR)));
     }
 
     @Test
@@ -156,7 +161,8 @@ class GroupResourceIT {
             .andExpect(jsonPath("$.id").value(group.getId().intValue()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.topic").value(DEFAULT_TOPIC))
-            .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE.doubleValue()));
+            .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE.doubleValue()))
+            .andExpect(jsonPath("$.year").value(DEFAULT_YEAR));
     }
 
     @Test
@@ -178,7 +184,7 @@ class GroupResourceIT {
         Group updatedGroup = groupRepository.findById(group.getId()).get();
         // Disconnect from session so that the updates on updatedGroup are not directly saved in db
         em.detach(updatedGroup);
-        updatedGroup.description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE);
+        updatedGroup.description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE).year(UPDATED_YEAR);
         GroupDTO groupDTO = groupMapper.toDto(updatedGroup);
 
         restGroupMockMvc
@@ -196,6 +202,7 @@ class GroupResourceIT {
         assertThat(testGroup.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testGroup.getTopic()).isEqualTo(UPDATED_TOPIC);
         assertThat(testGroup.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testGroup.getYear()).isEqualTo(UPDATED_YEAR);
     }
 
     @Test
@@ -290,6 +297,7 @@ class GroupResourceIT {
         assertThat(testGroup.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testGroup.getTopic()).isEqualTo(DEFAULT_TOPIC);
         assertThat(testGroup.getGrade()).isEqualTo(DEFAULT_GRADE);
+        assertThat(testGroup.getYear()).isEqualTo(DEFAULT_YEAR);
     }
 
     @Test
@@ -304,7 +312,7 @@ class GroupResourceIT {
         Group partialUpdatedGroup = new Group();
         partialUpdatedGroup.setId(group.getId());
 
-        partialUpdatedGroup.description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE);
+        partialUpdatedGroup.description(UPDATED_DESCRIPTION).topic(UPDATED_TOPIC).grade(UPDATED_GRADE).year(UPDATED_YEAR);
 
         restGroupMockMvc
             .perform(
@@ -321,6 +329,7 @@ class GroupResourceIT {
         assertThat(testGroup.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testGroup.getTopic()).isEqualTo(UPDATED_TOPIC);
         assertThat(testGroup.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testGroup.getYear()).isEqualTo(UPDATED_YEAR);
     }
 
     @Test

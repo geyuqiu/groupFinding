@@ -20,6 +20,7 @@ export class GroupUpdateComponent implements OnInit {
     description: [],
     topic: [],
     grade: [],
+    year: [],
   });
 
   constructor(protected groupService: GroupService, protected activatedRoute: ActivatedRoute, protected fb: FormBuilder) {}
@@ -69,6 +70,7 @@ export class GroupUpdateComponent implements OnInit {
       description: group.description,
       topic: group.topic,
       grade: group.grade,
+      year: group.year,
     });
   }
 
@@ -79,6 +81,7 @@ export class GroupUpdateComponent implements OnInit {
       description: this.editForm.get(['description'])!.value,
       topic: this.editForm.get(['topic'])!.value,
       grade: this.editForm.get(['grade'])!.value,
+      year: this.editForm.get(['year'])!.value,
     };
   }
 }

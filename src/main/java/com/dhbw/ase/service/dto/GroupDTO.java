@@ -16,6 +16,8 @@ public class GroupDTO implements Serializable {
 
     private Double grade;
 
+    private Integer year;
+
     public Long getId() {
         return id;
     }
@@ -48,6 +50,14 @@ public class GroupDTO implements Serializable {
         this.grade = grade;
     }
 
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,6 +87,7 @@ public class GroupDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", topic='" + getTopic() + "'" +
             ", grade=" + getGrade() +
+            ", year=" + getYear() +
             "}";
     }
 }

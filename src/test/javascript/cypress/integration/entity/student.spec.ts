@@ -30,7 +30,7 @@ describe('Student e2e test', () => {
     cy.authenticatedRequest({
       method: 'POST',
       url: '/api/groups',
-      body: { description: 'Branding Licensed Valleys', topic: 'mobile', grade: 98627 },
+      body: { description: 'Branding Licensed Valleys', topic: 'mobile', grade: 98627, year: 4470 },
     }).then(({ body }) => {
       group = body;
     });
